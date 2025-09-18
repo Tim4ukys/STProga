@@ -1,4 +1,4 @@
-#include <locale.h>
+п»ї#include <locale.h>
 #include <stdio.h>
 #include <inttypes.h>
 #include <malloc.h>
@@ -13,17 +13,17 @@ int main() {
 	stFile fFirst;
 	stFile fSecond;
 	
-	printf("Введите название первого файла: ");
+	printf("Р’РІРµРґРёС‚Рµ РЅР°Р·РІР°РЅРёРµ РїРµСЂРІРѕРіРѕ С„Р°Р№Р»Р°: ");
 	scanf_s("%s", &fFirst.fileName, (uint32_t)sizeof(fFirst.fileName));
 	if (fopen_s(&fFirst.header, fFirst.fileName, "rb")) {
-		printf("Первого файла не существует.\n");
+		printf("РџРµСЂРІРѕРіРѕ С„Р°Р№Р»Р° РЅРµ СЃСѓС‰РµСЃС‚РІСѓРµС‚.\n");
 		return 0;
 	}
 
-	printf("Введите название второго файла: ");
+	printf("Р’РІРµРґРёС‚Рµ РЅР°Р·РІР°РЅРёРµ РІС‚РѕСЂРѕРіРѕ С„Р°Р№Р»Р°: ");
 	scanf_s("%s", fSecond.fileName, (uint32_t)sizeof(fSecond.fileName));
 	if (fopen_s(&fSecond.header, fSecond.fileName, "rb")) {
-		printf("Второго файла не существует.\n");
+		printf("Р’С‚РѕСЂРѕРіРѕ С„Р°Р№Р»Р° РЅРµ СЃСѓС‰РµСЃС‚РІСѓРµС‚.\n");
 		return 0;
 	}
 
@@ -50,6 +50,6 @@ int main() {
 	fclose(fFirst.header);
 	fclose(fSecond.header);
 
-	printf(state ? "Файлы равны\n" : "Файлы не равны\n");
+	printf(state ? "Р¤Р°Р№Р»С‹ СЂР°РІРЅС‹\n" : "Р¤Р°Р№Р»С‹ РЅРµ СЂР°РІРЅС‹\n");
 	return 0;
 }

@@ -1,4 +1,4 @@
-#include <stdio.h>
+п»ї#include <stdio.h>
 #include <locale.h>
 #include <math.h>
 
@@ -11,7 +11,7 @@ int main() {
 	double a, b, c;
 
 	setlocale(LC_ALL, "Russian");
-	printf("Введите коэф. a, b, c (в одну строку через пробел): ");
+	printf("Р’РІРµРґРёС‚Рµ РєРѕСЌС„. a, b, c (РІ РѕРґРЅСѓ СЃС‚СЂРѕРєСѓ С‡РµСЂРµР· РїСЂРѕР±РµР»): ");
 	scanf("%lf %lf %lf", &a, &b, &c);
 	
 	double d;
