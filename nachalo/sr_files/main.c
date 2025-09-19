@@ -1,7 +1,6 @@
 ﻿#include <locale.h>
 #include <stdio.h>
 #include <inttypes.h>
-#include <malloc.h>
 #include <nmmintrin.h>
 
 typedef struct {
