@@ -28,7 +28,7 @@ int main() {
 	}
 
 	int state = 1;
-	while (!feof(fFirst.header) || !feof(fSecond.header)) {
+	while (!feof(fFirst.header) && !feof(fSecond.header)) {
 #define LEN_BUFF 128/8
 		uint8_t buff_a[LEN_BUFF];
 		uint8_t buff_b[LEN_BUFF];
