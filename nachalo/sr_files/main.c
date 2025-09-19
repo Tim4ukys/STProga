@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <inttypes.h>
 #include <malloc.h>
+#include <nmmintrin.h>
 
 typedef struct {
 	FILE* header;
@@ -29,22 +30,24 @@ int main() {
 
 	int state = 1;
 	while (!feof(fFirst.header) || !feof(fSecond.header)) {
-#define LEN_BUFF 256
+#define LEN_BUFF 128/8
 		uint8_t buff_a[LEN_BUFF];
 		uint8_t buff_b[LEN_BUFF];
 		size_t r_first = fread(buff_a, 1, LEN_BUFF, fFirst.header);
 		size_t r_second = fread(buff_b, 1, LEN_BUFF, fSecond.header);
-		
-		if (r_first != r_second){
+
+		if (r_first != r_second) {
 			state = 0;
 			break;
 		}
 
-		for (size_t i = 0u; i < r_first; i++) {
-			if (buff_a[i] != buff_b[i]) {
-				state = 0;
-				break;
-			}
+		__m128i strA = _mm_loadu_si128((__m128i*)buff_a);
+		__m128i strB = _mm_loadu_si128((__m128i*)buff_b);
+		
+		register int result = _mm_cmpestri(strA, r_first, strB, r_second, _SIDD_UBYTE_OPS | _SIDD_CMP_EQUAL_EACH);
+		if ((r_first - result) != r_first) {
+			state = 0;
+			break;
 		}
 	}
 	fclose(fFirst.header);
