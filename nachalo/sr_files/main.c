@@ -43,7 +43,7 @@ int main() {
 		__m128i strA = _mm_loadu_si128((__m128i*)buff_a);
 		__m128i strB = _mm_loadu_si128((__m128i*)buff_b);
 		
-		register int result = _mm_cmpestri(strA, r_first, strB, r_second, _SIDD_UBYTE_OPS | _SIDD_CMP_EQUAL_EACH);
+		register int result = _mm_cmpestri(strA, (int)r_first, strB, (int)r_second, _SIDD_UBYTE_OPS | _SIDD_CMP_EQUAL_EACH);
 		if (result) {
 			state = 0;
 			break;
