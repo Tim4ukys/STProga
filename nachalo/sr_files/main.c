@@ -2,6 +2,9 @@
 #include <stdio.h>
 #include <inttypes.h>
 #include <nmmintrin.h>
+#include <Windows.h>
+
+#define LEN_BUFF 128/8
 
 typedef struct {
 	FILE* header;
@@ -29,21 +32,25 @@ int main() {
 
 	int state = 1;
 	while (!feof(fFirst.header) && !feof(fSecond.header)) {
-#define LEN_BUFF 128/8
 		uint8_t buff_a[LEN_BUFF];
 		uint8_t buff_b[LEN_BUFF];
-		size_t r_first = fread(buff_a, 1, LEN_BUFF, fFirst.header);
-		size_t r_second = fread(buff_b, 1, LEN_BUFF, fSecond.header);
+		size_t r_first = fread_s(buff_a, LEN_BUFF, 1, LEN_BUFF, fFirst.header);
+		size_t r_second = fread_s(buff_b, LEN_BUFF, 1, LEN_BUFF, fSecond.header);
 
 		if (r_first != r_second) {
 			state = 0;
 			break;
 		}
 
+		/*if (memcmp(buff_a, buff_b, r_first)) {
+			state = 0;
+			break;
+		}*/
+
 		__m128i strA = _mm_loadu_si128((__m128i*)buff_a);
 		__m128i strB = _mm_loadu_si128((__m128i*)buff_b);
-		
-		register int result = _mm_cmpestri(strA, (int)r_first, strB, (int)r_second, _SIDD_UBYTE_OPS | _SIDD_CMP_EQUAL_EACH);
+
+		register int result = _mm_cmpestri(strA, (int)r_first, strB, (int)r_second, _SIDD_UBYTE_OPS | _SIDD_CMP_EQUAL_ORDERED);
 		if (result) {
 			state = 0;
 			break;
