@@ -16,7 +16,10 @@ function(copy_files_to_target target files)
     endforeach()
 endfunction()
 
-add_compile_options(-Zi)
-
 add_subdirectory("nachalo")
+add_subdirectory("algorithms")
+
+
+enable_testing()
+add_subdirectory("tests")
 
