@@ -11,22 +11,18 @@ void bubble_sort(void* arr, size_t lenght, size_t element_size, bubble_cmp_func 
 	void* pTemp = malloc(element_size);
 	assert(pTemp && "couldn't allocate memory");
 
-	bool no_stick;
-	do {
-		no_stick = true;
-		for (size_t i = 0; i < lenght-1;) {
+	do  {
+		for (size_t i = 0; i < lenght - 1;) {
 			void* pA = (uint8_t*)(arr)+element_size * i++;
 			void* pB = (uint8_t*)(arr)+element_size * i;
-			
-			const int result = cmp_func(pA, pB);
-			if (result > 0) {
+
+			if (cmp_func(pA, pB) > 0) {
 				memcpy(pTemp, pB, element_size);
 				memcpy(pB, pA, element_size);
 				memcpy(pA, pTemp, element_size);
-				no_stick = false;
 			}
 		}
-	} while (!no_stick);
+	} while (1 <= --lenght);
 
 	free(pTemp);
 }
