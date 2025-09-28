@@ -15,13 +15,7 @@ void merge_sort(void* arr, size_t lenght, size_t element_size, merge_cmp_func cm
 		void* pTemp = malloc(pow * element_size);
 		assert(pTemp && "couldn't allocate memory");
 		
-		// block - индекс в массиве начала блока размера pow
-		for (size_t block = 0; block < lenght; block += pow) {
-			// если другая половина блока выходит за размеры массива, то очевидно
-			// что этот блок отсортирован был ранее
-			if (block + pow / 2 >= lenght)
-				break;
-
+		for (size_t block = 0; block < lenght && block + pow / 2 < lenght; block += pow) {
 			for (size_t a = 0, b = pow / 2, i = 0; i < pow;) {
 				void* pA = get(arr, block + a, element_size);
 				void* pB = get(arr, block + b, element_size);
