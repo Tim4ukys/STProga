@@ -7,7 +7,8 @@ foreach(test_file ${TEST_SOURCES})
     get_filename_component(test_name ${test_file} NAME_WE)
     
     add_executable(${test_name} ${test_file})
-    target_link_libraries(${test_name} GTest::gtest GTest::gtest_main ALGORITHMS::BUBBLE_SORT)
+    target_link_libraries(${test_name} GTest::gtest GTest::gtest_main 
+        ALGORITHMS::BUBBLE_SORT ALGORITHMS::MERGE_SORT)
     add_test(NAME ${test_name} COMMAND ${test_name})
     
     message(STATUS "Added test: ${test_name}")
