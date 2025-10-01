@@ -3,6 +3,7 @@
 #include <assert.h>
 #include <memory.h>
 #include <stdbool.h>
+#include <math.h>
 
 #define get(p, i, sz) (uint8_t*)(p)+(i)*(sz)
 
@@ -11,10 +12,10 @@ void merge_sort(void* arr, size_t lenght, size_t element_size, merge_cmp_func cm
 	if (lenght <= 1 || !cmp_func || !arr || !element_size)
 		return;
 
+	const size_t sz_temp = (size_t)pow(2, ceil(log2(lenght)));
+	void const* pTemp = malloc(sz_temp * element_size); // log2
+	assert(pTemp && "couldn't allocate memory");
 	for (size_t pow = 2; pow / 2 < lenght; pow *= 2) {
-		void* pTemp = malloc(pow * element_size);
-		assert(pTemp && "couldn't allocate memory");
-		
 		for (size_t block = 0; block < lenght && block + pow / 2 < lenght; block += pow) {
 			for (size_t a = 0, b = pow / 2, i = 0; i < pow;) {
 				void* pA = get(arr, block + a, element_size);
@@ -38,8 +39,7 @@ void merge_sort(void* arr, size_t lenght, size_t element_size, merge_cmp_func cm
 			}
 			
 			memcpy(get(arr, block, element_size), pTemp, element_size * (block + pow > lenght ? lenght - block : pow));
-		}
-		
-		free(pTemp);
+		}	
 	}
+	free(pTemp);
 }
