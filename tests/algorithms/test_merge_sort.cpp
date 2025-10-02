@@ -15,8 +15,14 @@ static int __cdecl cmp_short(const void* a, const void* b) {
 }
 
 static int __cdecl cmp_double(const void* a, const void* b) {
-	constexpr double eps = 1e-14;;
-	if (fabs(*(double*)a - *(double*)b)/fabs(*(double*)b+*(double*)a) < eps) {
+	constexpr double eps = 1e-14;
+	if (!*(double*)a || !*(double*)b) return 0;
+	
+	const double c = fabs(*(double*)b + *(double*)a);
+	if (c == 0) {
+		return *(double*)b > *(double*)a ? 1 : 0;
+	} 
+	else if (fabs(*(double*)a - *(double*)b)/c < eps) {
 		return 0;
 	}
 	else if (*(double*)b > *(double*)a) {
