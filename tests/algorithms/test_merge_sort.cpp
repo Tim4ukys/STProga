@@ -15,20 +15,38 @@ static int __cdecl cmp_short(const void* a, const void* b) {
 }
 
 static int __cdecl cmp_double(const void* a, const void* b) {
-	constexpr double eps = 1e-14;
-	if (!*(double*)a || !*(double*)b) return 0;
+	constexpr double eps = 1e-7;
 	
+	if (!*(double*)a && !*(double*)b) {
+		return 0;
+	}
+
 	const double c = fabs(*(double*)b + *(double*)a);
-	if (c == 0) {
-		return *(double*)b > *(double*)a ? 1 : 0;
-	} 
-	else if (fabs(*(double*)a - *(double*)b)/c < eps) {
+	const double r = fabs(*(double*)a - *(double*)b) / c;
+	
+	if (r < eps) {
 		return 0;
 	}
 	else if (*(double*)b > *(double*)a) {
 		return 1;
 	}
 	return -1;
+}
+
+TEST(Algorithms_CmpDouble, CmpDouble) {
+	double fnumbs[]{3.0, 1.5, 0.0, 3.e-7, 1.5e-7, 0};
+	EXPECT_FALSE(cmp_double(fnumbs + 2, fnumbs + 5));
+
+
+	fnumbs[2] = fnumbs[1] + fnumbs[1];
+	fnumbs[1] *= 2.0;
+	fnumbs[5] = fnumbs[4] + fnumbs[4];
+	fnumbs[4] *= 2.0;	
+
+	EXPECT_FALSE(cmp_double(fnumbs, fnumbs + 1));
+	EXPECT_FALSE(cmp_double(fnumbs, fnumbs + 2));
+	EXPECT_FALSE(cmp_double(fnumbs + 3, fnumbs + 4));
+	EXPECT_FALSE(cmp_double(fnumbs + 3, fnumbs + 5));
 }
 
 static int g_arrNumbs[]{ -11, 2022, 02, 24, 228 };
