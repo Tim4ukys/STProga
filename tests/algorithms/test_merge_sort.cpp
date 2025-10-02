@@ -15,15 +15,14 @@ static int __cdecl cmp_short(const void* a, const void* b) {
 }
 
 static int __cdecl cmp_double(const void* a, const void* b) {
-	//return (int)ceil(*(double*)b - *(double*)a);
-	if (*(double*)b > *(double*)a) {
+	constexpr double eps = 1e-14;;
+	if (fabs(*(double*)a - *(double*)b)/fabs(*(double*)b+*(double*)a) < eps) {
+		return 0;
+	}
+	else if (*(double*)b > *(double*)a) {
 		return 1;
 	}
-	else if (*(double*)b < *(double*)a) {
-		return -1;
-	}
-	return 0;
-	//return *(double*)b > *(double*)a ? 1 : (*(double*)b < *(double*)a ? -1 : 0);
+	return -1;
 }
 
 static int g_arrNumbs[]{ -11, 2022, 02, 24, 228 };
