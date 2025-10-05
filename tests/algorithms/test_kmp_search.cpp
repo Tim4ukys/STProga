@@ -1,7 +1,6 @@
 ﻿#include <gtest/gtest.h>
 #include <utility>
 #include <string_view>
-#include <map>
 
 extern "C" {
 #include <kmp_search.h>
@@ -26,7 +25,7 @@ TEST(Algorithms_kmp_search, TestLps) {
 }
 
 TEST(Algorithms_kmp_search, FindNeedle) {
-    std::map<std::string_view, std::vector<std::string_view>> tests{
+    std::pair<std::string_view, std::vector<std::string_view>> tests[]{
         {"abcbecbabcbc", {"cbc", "abcbc", "e", "bab", "cbe", "abcbecbabcbc", "abcbecbabcbcdgdfhdgf", "test"}},
         {"aboba", {"ba", "bob", "oba", "o", "a", "test"}}};
 
