@@ -22,12 +22,14 @@ void kmp_init_lps(const char* pattern, size_t* lps) {
 }
 
 const char* kmp_search(const char* str, const char* pattern) {
-    if (!str || !pattern || !*str || !*pattern)
-        return (char*)-1;
+    if (!str || !pattern || !*str)
+        return NULL;
+    else if (!*pattern)
+        return str;
 
     const size_t szPattern = strlen(pattern);
     if (strlen(str) < szPattern)
-        return (char*)-1;
+        return NULL;
 
     size_t* lps = malloc(sizeof(size_t) * szPattern);
     assert(lps && "couldn't allocate memory");
@@ -47,5 +49,5 @@ const char* kmp_search(const char* str, const char* pattern) {
         }
     }
     free(lps);
-    return (char*)-1;
+    return NULL;
 }

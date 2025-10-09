@@ -8,6 +8,14 @@ extern "C" {
 
 extern "C" void kmp_init_lps(const char*, size_t*);
 
+TEST(Algorithms_kmp_search, TestNullArgs) {
+    EXPECT_FALSE(kmp_search(0, "test"));
+    EXPECT_FALSE(kmp_search("test", 0));
+    EXPECT_FALSE(kmp_search("\0", "\0"));
+    EXPECT_FALSE(kmp_search("test", "a"));
+    EXPECT_FALSE(kmp_search("tes", "test"));
+}
+
 TEST(Algorithms_kmp_search, TestLps) {
     std::pair<std::string_view, std::vector<size_t>> numbs[]{
         {"ababcabab", {0, 0, 1, 2, 0, 1, 2, 3, 4}},
@@ -34,8 +42,8 @@ TEST(Algorithms_kmp_search, FindNeedle) {
             auto        f = haystack.find(i);
             const char* p = kmp_search(haystack.data(), i.data());
 
-            EXPECT_TRUE((f == std::string_view::npos && p == (void*)-1) ||
-                        (p != (void*)-1 && f != std::string_view::npos) && (haystack.data() + f == p));
+            EXPECT_TRUE((f == std::string_view::npos && !p) ||
+                        (p && f != std::string_view::npos) && (haystack.data() + f == p));
         }
     }
 }
