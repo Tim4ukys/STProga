@@ -3,3 +3,4 @@
 find_package(GTest CONFIG REQUIRED)
 
 add_subdirectory(algorithms)
+add_subdirectory(st_data)

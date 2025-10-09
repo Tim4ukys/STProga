@@ -18,6 +18,7 @@ endfunction()
 
 add_subdirectory("nachalo")
 add_subdirectory("algorithms")
+add_subdirectory(st_data)
 
 
 enable_testing()
