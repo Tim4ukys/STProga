@@ -10,7 +10,7 @@
 void complex_add(const Complex* a, const Complex* b, Complex* out) {
     if (INVALID_ARGS(a, b, out)) {
         if (out)
-            memset(out, NULL, sizeof(Complex));
+            memset(out, 0, sizeof(Complex));
         return;
     }
     out->re = a->re + b->re;
@@ -20,7 +20,7 @@ void complex_add(const Complex* a, const Complex* b, Complex* out) {
 void complex_sub(const Complex* a, const Complex* b, Complex* out) {
     if (INVALID_ARGS(a, b, out)) {
         if (out)
-            memset(out, NULL, sizeof(Complex));
+            memset(out, 0, sizeof(Complex));
         return;
     }
     out->re = a->re - b->re;
@@ -30,7 +30,7 @@ void complex_sub(const Complex* a, const Complex* b, Complex* out) {
 void complex_mul(const Complex* a, const Complex* b, Complex* out) {
     if (INVALID_ARGS(a, b, out)) {
         if (out)
-            memset(out, NULL, sizeof(Complex));
+            memset(out, 0, sizeof(Complex));
         return;
     }
     out->re = a->re * b->re - a->im * b->im;
@@ -40,11 +40,12 @@ void complex_mul(const Complex* a, const Complex* b, Complex* out) {
 void complex_div(const Complex* a, const Complex* b, Complex* out) {
     if (INVALID_ARGS(a, b, out)) {
         if (out)
-            memset(out, NULL, sizeof(Complex));
+            memset(out, 0, sizeof(Complex));
         return;
     }
-    complex_mul(a, b, out);
-    double zn = b->re * b->re - b->im * b->im;
+    Complex t = {b->re, -b->im};
+    complex_mul(a, &t, out);
+    double zn = b->re * b->re + b->im * b->im;
     out->re /= zn;
     out->im /= zn;
 }
@@ -57,7 +58,8 @@ double complex_abs(const Complex* a) {
 
 void complex_alg_to_polar(const Complex* a, PolarComplex* out) {
     if (!a || NAN_COMPLEX(a) || !out) {
-        memset(out, NULL, sizeof(Complex));
+        if (out)
+            memset(out, 0, sizeof(Complex));
         return;
     }
     out->r = complex_abs(a);
@@ -66,7 +68,8 @@ void complex_alg_to_polar(const Complex* a, PolarComplex* out) {
 
 void complex_polar_to_alg(const PolarComplex* a, Complex* out) {
     if (!a || !out || NAN_POLAR(a)) {
-        memset(out, NULL, sizeof(Complex));
+        if (out)
+            memset(out, 0, sizeof(Complex));
         return;
     }
     out->re = a->r * cos(a->phi);
@@ -74,8 +77,9 @@ void complex_polar_to_alg(const PolarComplex* a, Complex* out) {
 }
 
 void complex_pow(const Complex* a, double degree, Complex* out) {
-    if (!a || !out || NAN_COMPLEX(a)) {
-        memset(out, NULL, sizeof(Complex));
+    if (!a || !out || NAN_COMPLEX(a) || degree != degree) {
+        if (out)
+            memset(out, 0, sizeof(Complex));
         return;
     }
     PolarComplex tmp;
@@ -87,7 +91,8 @@ void complex_pow(const Complex* a, double degree, Complex* out) {
 
 void complex_conj(const Complex* a, Complex* out) {
     if (!a || !out || NAN_COMPLEX(a)) {
-        memset(out, NULL, sizeof(Complex));
+        if (out)
+            memset(out, 0, sizeof(Complex));
         return;
     }
     out->re = a->re;
