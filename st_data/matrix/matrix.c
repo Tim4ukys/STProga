@@ -198,7 +198,7 @@ void resize(Matrix* mat, size_t rows, size_t cols) {
         }
     }
     for (size_t j = mat->cols; j < cols; ++j) {
-        for (size_t i = 0; i < rows; i++) {
+        for (size_t i = 0; i < min(rows, mat->rows); i++) {
             GET_EL(m, i, j) = 0.0;
         }
     }
