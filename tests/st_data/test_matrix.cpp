@@ -59,10 +59,12 @@ inline T random(const T& min, const T& max) {
 /////////////////////////////////
 
 class CMatrix {
-    mat::Matrix m_mat;
+    mutable mat::Matrix m_mat;
 
 public:
-    // row x column
+    CMatrix(CMatrix& a) {
+        m_mat = mat::create_copy(&a.m_mat);
+    }
     CMatrix(const mat::Matrix& mat)
         : m_mat(mat) {
     }
@@ -74,20 +76,59 @@ public:
         mat::destroy(&m_mat);
     }
 
-    inline mat::Matrix* operator&() noexcept {
+    inline mat::Matrix* operator&() const noexcept {
         return &m_mat;
     }
-    inline mat::Matrix* operator->() noexcept {
+    inline mat::Matrix* operator->() const noexcept {
         return &m_mat;
     }
 };
 
 TEST(StData_Matrix, Resize) {
+    auto    mt = std::make_unique<MemoryLeakCheck>();
     CMatrix a = mat::create(3, 3);
-    
+    for (size_t j = 1; j <= a->cols; j++) {
+        for (size_t i = 1; i <= a->rows; i++) {
+            auto d = random<double>(-100, 100);
+            mat::set_element(&a, i, j, d);
+        }
+    }
+
+    struct {
+        CMatrix                   m_CMat;
+        std::pair<size_t, size_t> m_Size;
+    } b[] = {{mat::create_copy(&a), {4, 2}},
+             {mat::create_copy(&a), {2, 4}},
+             {mat::create_copy(&a), {2, 2}},
+             {mat::create_copy(&a), {6, 6}}};
+
+    for (auto& i : b) {
+        mat::resize(&i.m_CMat, i.m_Size.first, i.m_Size.second);
+        auto& m = i.m_CMat;
+        for (size_t j = 1; j <= m->cols; j++) {
+            for (size_t i = 1; i <= m->rows; i++) {
+                EXPECT_TRUE(mat::get_element(&m, i, j) == ((j <= a->cols && i <= a->rows) ? mat::get_element(&a, i, j) : 0.0));
+            }
+        }
+    }
+}
+
+TEST(StData_Matrix, SetGet) {
+    auto mt = std::make_unique<MemoryLeakCheck>();
+
+    CMatrix a = mat::create_zero(3, 4);
+    for (size_t j = 1; j <= a->cols; j++) {
+        for (size_t i = 1; i <= a->rows; i++) {
+            auto d = random<double>(-100, 100);
+            mat::set_element(&a, i, j, d);
+            EXPECT_TRUE(d == mat::get_element(&a, i, j));
+        }
+    }
 }
 
 TEST(StData_Matrix, Algebra) {
+    auto mt = std::make_unique<MemoryLeakCheck>();
+
     auto empty = mat::create_empty();
     for (auto& f : {mat::multiply, mat::subtract, mat::add}) {
         auto a = f(&empty, 0);
@@ -115,14 +156,14 @@ TEST(StData_Matrix, Algebra) {
         return !cmp_double(a, b);
     };
     EXPECT_TRUE(std::equal(b->A, b->A + b->cols * b->rows, CMatrix(mat::multiply_scalar(&a, 3.0))->A, eq));
-    
+
     auto c = CMatrix(mat::divide_scalar(&CMatrix(mat::multiply_scalar(&a, 5)), 5));
     EXPECT_TRUE(std::equal(a->A, a->A + a->cols * a->rows, c->A, eq));
 }
 
 TEST(StData_Matrix, Create) {
     auto mt = std::make_unique<MemoryLeakCheck>();
-    
+
     auto a = mat::create_empty();
     auto zero = std::vector<uint8_t>(sizeof(mat::Matrix));
     EXPECT_FALSE(memcmp(&a, zero.data(), sizeof(mat::Matrix)));
@@ -145,7 +186,7 @@ TEST(StData_Matrix, Create) {
             EXPECT_FALSE(cmp_double(mat::get_element(&a, i, j), i == j ? 1.0 : 0.0));
         }
     }
-    
+
     mat::destroy(&a);
     a = mat::create_zero(3, 4);
     EXPECT_FALSE(memcmp(a.A, std::vector<double>(size_t(3 * 4), 0).data(), 3 * 4 * sizeof(double)));
@@ -153,7 +194,7 @@ TEST(StData_Matrix, Create) {
 
     auto d = random<double>(1.0, 1e5);
     a = mat::create_constants(3, 4, d);
-    EXPECT_FALSE(memcmp(a.A, std::vector<double>(size_t(3*4), d).data(), 3 * 4 * sizeof(double)));
+    EXPECT_FALSE(memcmp(a.A, std::vector<double>(size_t(3 * 4), d).data(), 3 * 4 * sizeof(double)));
     mat::destroy(&a);
 }
 
@@ -162,16 +203,16 @@ TEST(StData_Matrix, Transposition) {
 
     for (size_t i = 0; i < 100; i++) {
         std::vector<double> numbs;
-        numbs.resize(4*4);
+        numbs.resize(4 * 4);
         for (size_t j = 0; j < 4 * 4; j++) {
             numbs[j] = random<double>(-1000.0, 1000.0);
         }
         auto a = CMatrix(numbs, {4, 4});
         auto b = CMatrix(mat::transpose(&CMatrix(mat::transpose(&a))));
-        auto eq = [](const double& a, const double& b) { 
-            return !cmp_double(a, b); 
-            };
-        EXPECT_TRUE(std::equal(a->A, a->A + a->cols*a->rows, b->A, eq));
+        auto eq = [](const double& a, const double& b) {
+            return !cmp_double(a, b);
+        };
+        EXPECT_TRUE(std::equal(a->A, a->A + a->cols * a->rows, b->A, eq));
     }
 }
 
@@ -187,9 +228,9 @@ TEST(StData_Matrix, Det) {
         }
 
         auto a = CMatrix(numbs, sz);
-        auto mt = arma::mat(numbs.data(), sz.first, sz.second); 
+        auto mt = arma::mat(numbs.data(), sz.first, sz.second);
         if (sz.second != sz.first) {
-            EXPECT_FALSE(cmp_double(mat::determinant(&a), 0.0));  
+            EXPECT_FALSE(cmp_double(mat::determinant(&a), 0.0));
             continue;
         }
 

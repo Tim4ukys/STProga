@@ -174,21 +174,31 @@ void resize(Matrix* mat, size_t rows, size_t cols) {
     }
 
     Matrix m = {.A = mat->A, .cols = cols, .rows = rows};
-    for (size_t i = 0; i < rows && i < mat->rows; i++) {
-        for (size_t j = 0; j < cols && j < mat->cols; j++) {
-            GET_EL(m, i, j) = GET_EL(*mat, i, j);
+    if (mat->cols < cols) {
+        mat->A = m.A = realloc(mat->A, sizeof(double) * rows * cols);
+        assert(m.A && "couldn't allocate memory");
+        for (size_t i = min(rows, mat->rows) - 1; i; i--) {
+            for (size_t j = mat->cols; j; j--) {
+                GET_EL(m, i, j - 1) = GET_EL(*mat, i, j - 1);
+            }
         }
+    } else {
+        for (size_t i = 1; i < rows && i < mat->rows; i++) {
+            for (size_t j = 0; j < cols && j < mat->cols; j++) {
+                GET_EL(m, i, j) = GET_EL(*mat, i, j);
+            }
+        }
+        m.A = realloc(mat->A, sizeof(double) * rows * cols);
+        assert(m.A && "couldn't allocate memory");
     }
-    m.A = realloc(mat->A, sizeof(double) * rows * cols);
-    assert(m.A && "couldn't allocate memory");
 
     for (size_t i = mat->rows; i < rows; ++i) {
-        for (size_t j = mat->cols; j < cols; j++) {
+        for (size_t j = 0; j < cols; j++) {
             GET_EL(m, i, j) = 0.0;
         }
     }
     for (size_t j = mat->cols; j < cols; ++j) {
-        for (size_t i = mat->rows; i < rows; i++) {
+        for (size_t i = 0; i < rows; i++) {
             GET_EL(m, i, j) = 0.0;
         }
     }
