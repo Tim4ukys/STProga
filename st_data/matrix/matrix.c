@@ -318,7 +318,7 @@ double determinant(Matrix* mat) {
         const double a = GET_EL(m, j, j);
         if (!cmp_double(a, 0.0)) {
             det = 0.0;
-            goto __exit;
+            break;
         }
         det *= a;
         for (size_t i = j + 1; i < mat->rows; ++i) {
@@ -328,7 +328,6 @@ double determinant(Matrix* mat) {
         }
     }
 
-__exit:
     destroy(&m);
     return det;
 }
@@ -348,7 +347,8 @@ Matrix inverse(Matrix* mat) {
         double a = GET_EL(t, j, j);
         if (!cmp_double(a, 0.0)) {
             destroy(&r);
-            goto __exit;
+            destroy(&t);
+            return r;
         } else if (cmp_double(a, 1.0)) {
             gs_row_div_scalar(&t, j, a, j);
             gs_row_div_scalar(&r, j, a, 0);
@@ -369,7 +369,6 @@ Matrix inverse(Matrix* mat) {
         }
     }
 
-__exit:
     destroy(&t);
     return r;
 }
