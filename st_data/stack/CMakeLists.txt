@@ -1,0 +1,9 @@
+﻿project("stack" C)
+
+file(GLOB SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/*.c")
+file(GLOB PUBLIC_HEADER "${CMAKE_CURRENT_SOURCE_DIR}/*.h")
+
+add_library(${PROJECT_NAME} STATIC ${SOURCE} ${PUBLIC_HEADER})
+add_library(ST_DATA::STACK ALIAS ${PROJECT_NAME})
+
+target_include_directories(${PROJECT_NAME} PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
