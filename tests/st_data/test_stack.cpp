@@ -83,6 +83,7 @@ TEST(StData_Stack, create) {
         EXPECT_TRUE(m_numbs[N_NUMBS - i - 1] == a);
     }
     EXPECT_TRUE(stack_size(&stack) == 0);
+    EXPECT_TRUE(stack.m_szLen == 8); // т.е размер массива == min_len
 
     stack_destroy(&stack);
 }

@@ -4,6 +4,8 @@
 #include <assert.h>
 #include <stdbool.h>
 
+#define MIN_LEN 8
+
 static bool is_valid(Stack* pstack) {
     return pstack && pstack->m_szElement && pstack->m_szLen;
 }
@@ -11,15 +13,15 @@ static bool is_valid(Stack* pstack) {
 void stack_create(Stack* pstack) {
     if (!pstack || !pstack->m_szElement)
         return;
-    
+
     pstack->m_nLastIndex = 0;
-    if (pstack->m_arr && pstack->m_szLen != 8)
-        pstack->m_arr = realloc(pstack->m_arr, 8 * pstack->m_szElement);
+    if (pstack->m_arr && pstack->m_szLen != MIN_LEN)
+        pstack->m_arr = realloc(pstack->m_arr, MIN_LEN * pstack->m_szElement);
     else 
-        pstack->m_arr = malloc(8 * pstack->m_szElement); 
+        pstack->m_arr = malloc(MIN_LEN * pstack->m_szElement); 
     
-    pstack->m_szLen = 8;
     assert(pstack->m_arr && "couldn't allocate memory");
+    pstack->m_szLen = MIN_LEN;
 }
 
 void stack_destroy(Stack* pstack) {
@@ -34,7 +36,7 @@ void stack_destroy(Stack* pstack) {
 static void keep_memory_strong(Stack* pstack) {
     if (3 * pstack->m_nLastIndex > pstack->m_szLen * 2) {   
         pstack->m_arr = realloc(pstack->m_arr, (pstack->m_szLen *= 2)*pstack->m_szElement);
-    } else if (pstack->m_szLen == 8) {
+    } else if (pstack->m_szLen == MIN_LEN) {
         return;
     } else if (3 * pstack->m_nLastIndex < pstack->m_szLen) {
         pstack->m_arr = realloc(pstack->m_arr, (pstack->m_szLen /= 2) * pstack->m_szElement);
