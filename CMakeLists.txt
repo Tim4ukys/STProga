@@ -19,6 +19,7 @@ endfunction()
 add_subdirectory("nachalo")
 add_subdirectory("algorithms")
 add_subdirectory(st_data)
+add_subdirectory(ZVeZda)
 
 
 enable_testing()
