@@ -6,6 +6,9 @@ void rc_reset(stRCCheck* p_check) {
 }
 
 void rc_next(const char* str, size_t len, stRCCheck* p_check, char* out, size_t* len_out) {
+    if (len_out)
+        *len_out = 0;
+
     for (size_t i = 0; i < len; i++) {
         char a = str[i];
 
@@ -22,11 +25,12 @@ void rc_next(const char* str, size_t len, stRCCheck* p_check, char* out, size_t*
                     (*len_out)++;
                     p_check->m_nOpen = 0;
                 }
-            }
-            else if (p_check->m_nOpen == 3)
+            } else if (p_check->m_nOpen == 3) {
                 p_check->m_nOpen = (a == '/' ? 0 : 2);
-            else if (a == '*')
+                continue;
+            } else if (a == '*') {
                 p_check->m_nOpen = 3;
+            }
         } else if (a == '\\') {
             p_check->m_bIsNewLine = true;
         } else if (p_check->m_bIsNewLine) {
