@@ -4,11 +4,11 @@
 
 #define LEN_BUFF 256
 
-#define ERR_ARGS "Err args. Pls, run like: ./rem_comments_ex *in file name* *out file name*\n"
-#define ERR_FILE_OPEN "Сouldn't open file. Abort.\n"
+#define ERR_ARGS         "Err args. Pls, run like: ./rem_comments_ex *in file name* *out file name*\n"
+#define ERR_FILE_OPEN    "Сouldn't open file. Abort.\n"
 #define ERR_FILE_SV_OPEN "Couldn't save out file. Abort.\n"
 #define ERR_NO_WRITE     "Couldn't write in out file. Abort.\n"
-#define ERR_BALANCE      "There are no closed comments in the file. Out file no save."
+#define ERR_BALANCE      "There are no closed comments in the file. Out file no save.\n"
 
 void err_exit(const char* msg) {
     printf(msg);
@@ -44,7 +44,7 @@ int main(int argc, char* argv[]) {
 
     switch (rc_check(&rc)) {
     case RC_STATE_OK:
-        printf("success\n");
+        printf("File %s success saved.\n", argv[2]);
         break;
     case RC_STATE_BALANCE_ERR:
         remove(argv[2]);
