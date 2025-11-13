@@ -13,8 +13,16 @@ zrada
 peremoga*/ SVO
 //gg
 ZOV)", R"(goida =  SVO
+ZOV)"},
+        {R"(//
+//
+//
+//
+//
 
-ZOV)"}
+test)",
+         R"(
+test)"}
     };
 
     for (auto& [in, et] : test) {

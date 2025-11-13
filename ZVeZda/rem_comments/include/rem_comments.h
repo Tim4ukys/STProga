@@ -9,10 +9,19 @@ typedef enum {
     RC_STATE_BALANCE_ERR = 0
 } RC_STATE;
 
+
+typedef enum {
+    STATE_KOM_NONE = 0,
+    STATE_KOM_SLASH = 1,
+    STATE_KOM_STAR_1 = 2,
+    STATE_KOM_STAR_2 = 3
+} STATE_KOM;
+
 typedef struct {
-    uint8_t m_nOpen;
-    bool    m_bIsOpenSimple;
-    bool    m_bIsNewLine;
+    STATE_KOM m_currentState;
+    bool      m_bIsOpenSimple;
+    bool      m_bIsNewLine;
+    bool      m_bIsEmptyStr;
 } stRCCheck;
 
 void rc_reset(stRCCheck* p_check);
