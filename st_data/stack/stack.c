@@ -56,12 +56,12 @@ size_t stack_size(Stack* pstack) {
 }
 
 Pointer stack_pop(Stack* pstack) {
-    if (!is_valid(pstack) || !pstack->m_nLastIndex)
-        return NULL;
-    
-    pstack->m_nLastIndex--;
-    keep_memory_strong(pstack);
-    return pstack->m_arr + pstack->m_szElement * pstack->m_nLastIndex;
+    Pointer r = stack_peek(pstack);
+    if (r) {
+        pstack->m_nLastIndex--;
+        keep_memory_strong(pstack);
+    }
+    return r;
 }
 
 Pointer stack_peek(Stack* pstack) {
