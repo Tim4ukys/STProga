@@ -10,4 +10,5 @@
    1. [Комплексные числа](https://opk.afti.ru/tasks/kompleksnye-chisla)
    2. [Матрица](https://opk.afti.ru/tasks/matritsa)
    3. [Динамический стек на базе динамического массива (Си)](https://opk.afti.ru/tasks/dinamicheskiy-stek-na-baze-dinamicheskogo-massiva-si)
-   4. [Удаление комментариев из программы на C](https://opk.afti.ru/tasks/udalenie-kommentariev-iz-programmy-na-c)
+4. Задачи со звездочкой
+   1. [Удаление комментариев из программы на C](https://opk.afti.ru/tasks/udalenie-kommentariev-iz-programmy-na-c)
